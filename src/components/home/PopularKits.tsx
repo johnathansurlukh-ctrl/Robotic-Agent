@@ -1,6 +1,9 @@
+'use client'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Clock, Zap, Star, ShoppingCart, ArrowRight } from 'lucide-react'
+import { Clock, Star, ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react'
 import { getFeaturedProjects } from '@/data/projects'
+import { useCart } from '@/context/CartContext'
 
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-700',
@@ -10,6 +13,14 @@ const difficultyColors = {
 
 export default function PopularKits() {
   const projects = getFeaturedProjects()
+  const { addItem } = useCart()
+  const [added, setAdded] = useState<Record<string, boolean>>({})
+
+  function handleAddKit(project: ReturnType<typeof getFeaturedProjects>[number]) {
+    addItem({ id: `kit-${project.id}`, name: project.name, price: project.fullKitPrice, image: project.image, slug: `/projects/${project.slug}` })
+    setAdded(prev => ({ ...prev, [project.id]: true }))
+    setTimeout(() => setAdded(prev => ({ ...prev, [project.id]: false })), 2000)
+  }
 
   return (
     <section className="py-16 bg-white">
@@ -86,8 +97,8 @@ export default function PopularKits() {
                     >
                       View Kit
                     </Link>
-                    <button className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-1.5">
-                      <ShoppingCart size={15} /> Add All
+                    <button onClick={() => handleAddKit(project)} className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-1.5">
+                      {added[project.id] ? <><CheckCircle size={15} /> Added!</> : <><ShoppingCart size={15} /> Add All</>}
                     </button>
                   </div>
                 </div>
