@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { ArrowRight, Zap, Shield, Truck, Star, CheckCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const headlines = [
   'Build Your Robot. We Supply the Parts.',
@@ -18,6 +19,7 @@ const stats = [
 
 export default function HeroSection() {
   const [headlineIndex, setHeadlineIndex] = useState(0)
+  const { fmt } = useCurrency()
 
   useEffect(() => {
     const t = setInterval(() => setHeadlineIndex((i) => (i + 1) % headlines.length), 4000)
@@ -84,10 +86,10 @@ export default function HeroSection() {
           {/* Right — feature cards */}
           <div className="hidden lg:grid grid-cols-2 gap-4 animate-fade-up anim-delay-200">
             {[
-              { img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=120&h=120&fit=crop', title: 'Line Follower Kit', sub: 'Complete kit · Beginner', price: '₹1,351', badge: 'Popular', href: '/projects/line-follower-robot' },
-              { img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=120&fit=crop', title: 'Obstacle Avoidance', sub: 'With ultrasonic sensor', price: '₹1,743', badge: 'Best Seller', href: '/projects/obstacle-avoidance-robot' },
-              { img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=120&h=120&fit=crop', title: 'Bluetooth Robot Car', sub: 'Smartphone controlled', price: '₹1,725', badge: 'New', href: '/projects/bluetooth-controlled-robot' },
-              { img: 'https://images.unsplash.com/photo-1565034946487-077786996e27?w=120&h=120&fit=crop', title: 'Robotic Arm Kit', sub: '4-DOF servo arm', price: '₹1,833', badge: 'Advanced', href: '/projects/robotic-arm-kit' },
+              { img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=120&h=120&fit=crop', title: 'Line Follower Kit', sub: 'Complete kit · Beginner', price: 1351, badge: 'Popular', href: '/projects/line-follower-robot' },
+              { img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=120&fit=crop', title: 'Obstacle Avoidance', sub: 'With ultrasonic sensor', price: 1743, badge: 'Best Seller', href: '/projects/obstacle-avoidance-robot' },
+              { img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=120&h=120&fit=crop', title: 'Bluetooth Robot Car', sub: 'Smartphone controlled', price: 1725, badge: 'New', href: '/projects/bluetooth-controlled-robot' },
+              { img: 'https://images.unsplash.com/photo-1565034946487-077786996e27?w=120&h=120&fit=crop', title: 'Robotic Arm Kit', sub: '4-DOF servo arm', price: 1833, badge: 'Advanced', href: '/projects/robotic-arm-kit' },
             ].map((card) => (
               <Link key={card.title} href={card.href} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 hover:bg-white/15 transition-colors cursor-pointer group block">
                 <div className="flex items-start justify-between mb-3">
@@ -98,7 +100,7 @@ export default function HeroSection() {
                 </div>
                 <div className="text-white font-bold text-sm mb-1">{card.title}</div>
                 <div className="text-gray-300 text-xs mb-3">{card.sub}</div>
-                <div className="text-blue-300 font-black text-lg">{card.price}</div>
+                <div className="text-blue-300 font-black text-lg">{fmt(card.price)}</div>
                 <div className="mt-2 text-xs text-gray-400 group-hover:text-blue-300 transition-colors">View full kit →</div>
               </Link>
             ))}

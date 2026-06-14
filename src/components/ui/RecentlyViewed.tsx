@@ -2,8 +2,10 @@
 import Link from 'next/link'
 import { Clock } from 'lucide-react'
 import { RecentItem } from '@/hooks/useRecentlyViewed'
+import { useCurrency } from '@/context/CurrencyContext'
 
 export default function RecentlyViewed({ items }: { items: RecentItem[] }) {
+  const { fmt } = useCurrency()
   if (items.length === 0) return null
 
   return (
@@ -24,7 +26,7 @@ export default function RecentlyViewed({ items }: { items: RecentItem[] }) {
               </div>
               <div className="p-3">
                 <div className="text-xs font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">{item.name}</div>
-                {item.price > 0 && <div className="text-sm font-black text-blue-600 mt-1">₹{item.price.toLocaleString()}</div>}
+                {item.price > 0 && <div className="text-sm font-black text-blue-600 mt-1">{fmt(item.price)}</div>}
               </div>
             </Link>
           ))}

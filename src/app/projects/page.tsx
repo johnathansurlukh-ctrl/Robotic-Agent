@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Clock, Star, ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react'
 import { projects } from '@/data/projects'
 import { useCart } from '@/context/CartContext'
+import { useCurrency } from '@/context/CurrencyContext'
 import AnimateIn from '@/components/ui/AnimateIn'
 
 const difficultyColors = {
@@ -23,6 +24,7 @@ const categories = [
 
 export default function ProjectsPage() {
   const { addItem } = useCart()
+  const { fmt } = useCurrency()
   const [added, setAdded] = useState<Record<string, boolean>>({})
 
   function handleAdd(project: typeof projects[number]) {
@@ -117,7 +119,7 @@ export default function ProjectsPage() {
                 <div className="flex items-center justify-between mt-auto">
                   <div>
                     <div className="text-xs text-gray-400">Full kit</div>
-                    <div className="text-2xl font-black text-gray-900">₹{project.fullKitPrice.toLocaleString()}</div>
+                    <div className="text-2xl font-black text-gray-900">{fmt(project.fullKitPrice)}</div>
                   </div>
                   <div className="flex gap-2">
                     <Link href={`/projects/${project.slug}`} className="px-4 py-2.5 text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors flex items-center gap-1.5">

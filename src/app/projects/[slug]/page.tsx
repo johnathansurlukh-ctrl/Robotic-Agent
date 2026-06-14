@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { ShoppingCart, Clock, ChevronRight, CheckCircle, Download, Code2, Wrench, Star, ArrowRight, Zap, AlertCircle, Play, Youtube } from 'lucide-react'
 import { getProjectBySlug } from '@/data/projects'
 import { useCart } from '@/context/CartContext'
+import { useCurrency } from '@/context/CurrencyContext'
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed'
 import RecentlyViewed from '@/components/ui/RecentlyViewed'
 
@@ -23,6 +24,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
   if (!project) return null
 
   const { addItem } = useCart()
+  const { fmt } = useCurrency()
   const [activeStep, setActiveStep] = useState(0)
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set())
   const [addedToCart, setAddedToCart] = useState(false)
@@ -157,7 +159,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                       </div>
                       <div className="flex items-center gap-3 text-right">
                         <span className="text-xs text-gray-400">×{item.quantity}</span>
-                        <span className={`text-sm font-bold ${owned ? 'text-gray-300 line-through' : 'text-gray-900'}`}>₹{item.price.toLocaleString()}</span>
+                        <span className={`text-sm font-bold ${owned ? 'text-gray-300 line-through' : 'text-gray-900'}`}>{fmt(item.price)}</span>
                       </div>
                     </div>
                   )
@@ -173,7 +175,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-xs text-gray-400">×{item.quantity}</span>
-                          <span className="text-sm font-bold text-gray-700">₹{item.price.toLocaleString()}</span>
+                          <span className="text-sm font-bold text-gray-700">{fmt(item.price)}</span>
                         </div>
                       </div>
                     ))}
@@ -184,8 +186,8 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                 <div>
                   {missingComponents.length > 0 ? (
                     <>
-                      <div className="text-sm text-blue-700 font-medium">{missingComponents.length} components needed · ₹{missingTotal.toLocaleString()}</div>
-                      <div className="text-xs text-blue-500">Full kit: ₹{project.fullKitPrice.toLocaleString()}</div>
+                      <div className="text-sm text-blue-700 font-medium">{missingComponents.length} components needed · {fmt(missingTotal)}</div>
+                      <div className="text-xs text-blue-500">Full kit: {fmt(project.fullKitPrice)}</div>
                     </>
                   ) : (
                     <div className="text-sm text-green-700 font-bold">✓ You own all required components!</div>
@@ -254,7 +256,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-gray-200 p-6 sticky top-24">
               <div className="text-center mb-5">
-                <div className="text-3xl font-black text-gray-900">₹{project.fullKitPrice.toLocaleString()}</div>
+                <div className="text-3xl font-black text-gray-900">{fmt(project.fullKitPrice)}</div>
                 <div className="text-sm text-gray-400 mt-0.5">All {project.components.length} components included</div>
               </div>
               <div className="space-y-3 mb-5">

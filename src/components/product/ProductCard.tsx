@@ -5,6 +5,7 @@ import { Product } from '@/types'
 import { useCart } from '@/context/CartContext'
 import { useWishlist } from '@/context/WishlistContext'
 import { useComparison } from '@/context/ComparisonContext'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const stockColors = { in_stock: 'text-green-600', low_stock: 'text-orange-500', out_of_stock: 'text-red-500' }
 const stockLabels = { in_stock: 'In Stock', low_stock: 'Low Stock', out_of_stock: 'Out of Stock' }
@@ -16,6 +17,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart()
   const { toggle: toggleWishlist, has: inWishlist } = useWishlist()
   const { add: addCompare, remove: removeCompare, has: inCompare } = useComparison()
+  const { fmt } = useCurrency()
 
   const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0
   const lowQty = product.stock === 'low_stock' ? (LOW_STOCK_QTY[product.id] || 5) : null
@@ -87,8 +89,8 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price + Cart */}
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
           <div>
-            <div className="text-xl font-black text-gray-900">₹{product.price.toLocaleString()}</div>
-            {product.originalPrice && <div className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</div>}
+            <div className="text-xl font-black text-gray-900">{fmt(product.price)}</div>
+            {product.originalPrice && <div className="text-xs text-gray-400 line-through">{fmt(product.originalPrice)}</div>}
           </div>
           <div className="flex gap-1.5">
             <button onClick={handleCompare} title="Compare" className={`p-2 rounded-lg transition-colors ${compared ? 'bg-blue-600 text-white' : 'text-blue-600 bg-blue-50 hover:bg-blue-100'}`}>

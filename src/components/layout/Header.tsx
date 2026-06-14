@@ -11,6 +11,7 @@ import { useWishlist } from '@/context/WishlistContext'
 import { useLoyalty } from '@/context/LoyaltyContext'
 import { useTheme } from '@/context/ThemeContext'
 import { useAuth } from '@/context/AuthContext'
+import { useCurrency } from '@/context/CurrencyContext'
 import { LogIn, LogOut, UserCircle } from 'lucide-react'
 
 const navLinks = [
@@ -53,6 +54,7 @@ export default function Header() {
   const { points } = useLoyalty()
   const { dark, toggle: toggleTheme } = useTheme()
   const { user, logout } = useAuth()
+  const { fmt } = useCurrency()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -257,7 +259,7 @@ export default function Header() {
                         <img referrerPolicy="no-referrer" src={r.image} alt={r.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-semibold text-gray-900 truncate">{r.name}</div>
-                          <div className="text-xs text-blue-600 font-bold">₹{r.price.toLocaleString()}</div>
+                          <div className="text-xs text-blue-600 font-bold">{fmt(r.price)}</div>
                         </div>
                       </button>
                     ))}
@@ -269,7 +271,7 @@ export default function Header() {
                         <img referrerPolicy="no-referrer" src={r.image} alt={r.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-semibold text-gray-900 truncate">{r.name}</div>
-                          <div className="text-xs text-green-600 font-bold">Kit ₹{r.price.toLocaleString()}</div>
+                          <div className="text-xs text-green-600 font-bold">Kit {fmt(r.price)}</div>
                         </div>
                       </button>
                     ))}

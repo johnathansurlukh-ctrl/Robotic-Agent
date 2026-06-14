@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Clock, Star, ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react'
 import { getFeaturedProjects } from '@/data/projects'
 import { useCart } from '@/context/CartContext'
+import { useCurrency } from '@/context/CurrencyContext'
 
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-700',
@@ -14,6 +15,7 @@ const difficultyColors = {
 export default function PopularKits() {
   const projects = getFeaturedProjects()
   const { addItem } = useCart()
+  const { fmt } = useCurrency()
   const [added, setAdded] = useState<Record<string, boolean>>({})
 
   function handleAddKit(project: ReturnType<typeof getFeaturedProjects>[number]) {
@@ -88,7 +90,7 @@ export default function PopularKits() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-xs text-gray-400">Full kit price</div>
-                    <div className="text-2xl font-black text-gray-900">₹{project.fullKitPrice.toLocaleString()}</div>
+                    <div className="text-2xl font-black text-gray-900">{fmt(project.fullKitPrice)}</div>
                   </div>
                   <div className="flex gap-2">
                     <Link

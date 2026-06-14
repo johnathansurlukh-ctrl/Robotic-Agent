@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle, ShoppingCart, ArrowRight, Star } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
+import { useCurrency } from '@/context/CurrencyContext'
 import AnimateIn from '@/components/ui/AnimateIn'
 
 const kits = [
@@ -86,6 +87,7 @@ const kits = [
 
 export default function StarterKitsPage() {
   const { addItem } = useCart()
+  const { fmt } = useCurrency()
   const [added, setAdded] = useState<Record<string, boolean>>({})
 
   function handleAdd(kit: typeof kits[number]) {
@@ -151,8 +153,8 @@ export default function StarterKitsPage() {
                 {/* Price + CTA */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-2xl font-black text-gray-900">₹{kit.price.toLocaleString()}</div>
-                    {'originalPrice' in kit && kit.originalPrice && <div className="text-sm text-gray-400 line-through">₹{kit.originalPrice.toLocaleString()}</div>}
+                    <div className="text-2xl font-black text-gray-900">{fmt(kit.price)}</div>
+                    {'originalPrice' in kit && kit.originalPrice && <div className="text-sm text-gray-400 line-through">{fmt(kit.originalPrice)}</div>}
                   </div>
                   <div className="flex gap-2">
                     <Link href="#" className="px-3 py-2.5 text-blue-600 bg-blue-50 hover:bg-blue-100 text-sm font-semibold rounded-xl transition-colors flex items-center gap-1">
