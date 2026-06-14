@@ -804,15 +804,9 @@ export default function AccountPage() {
       <div className="bg-[#0f2744] py-10">
         <div className="container-xl">
           <div className="flex items-center gap-5">
-            {/* Avatar — show Google photo if available, else initials */}
-            {user.avatar ? (
-              <img src={user.avatar} alt={user.name} referrerPolicy="no-referrer"
-                className="h-16 w-16 shrink-0 rounded-full ring-2 ring-white/30 object-cover" />
-            ) : (
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/15 text-xl font-bold text-white ring-2 ring-white/30">
-                {user.initials}
-              </div>
-            )}
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/15 text-xl font-bold text-white ring-2 ring-white/30">
+              {user.initials}
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-white">{user.name}</h1>
               <p className="text-sm text-blue-200">{user.email}</p>

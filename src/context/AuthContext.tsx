@@ -1,23 +1,12 @@
 'use client'
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-  updateProfile,
-  type User as FirebaseUser,
-} from 'firebase/auth'
-import { auth, googleProvider } from '@/lib/firebase'
 
 interface User {
   name: string
   email: string
   initials: string
-  provider: 'email' | 'google'
-  avatar?: string
+  provider: 'email'
   uid: string
 }
 
@@ -33,6 +22,9 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
+const SESSION_KEY = 'rk_session'
+const USERS_KEY = 'rk_users'
+
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean)
   if (words.length === 0) return '?'
@@ -40,16 +32,37 @@ function getInitials(name: string): string {
   return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase()
 }
 
-function firebaseUserToUser(fbUser: FirebaseUser): User {
-  const name = fbUser.displayName || fbUser.email?.split('@')[0] || 'User'
-  const provider = fbUser.providerData[0]?.providerId === 'google.com' ? 'google' : 'email'
+function makeUid(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36)
+}
+
+interface StoredUser {
+  uid: string
+  name: string
+  email: string
+  password: string
+}
+
+function getStoredUsers(): StoredUser[] {
+  if (typeof window === 'undefined') return []
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function saveStoredUsers(users: StoredUser[]) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users))
+}
+
+function toUser(s: StoredUser): User {
   return {
-    uid: fbUser.uid,
-    name,
-    email: fbUser.email ?? '',
-    initials: getInitials(name),
-    provider,
-    avatar: fbUser.photoURL ?? undefined,
+    uid: s.uid,
+    name: s.name,
+    email: s.email,
+    initials: getInitials(s.name),
+    provider: 'email',
   }
 }
 
@@ -57,35 +70,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Listen to Firebase auth state — fires on login, logout, and page refresh
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
-      setUser(fbUser ? firebaseUserToUser(fbUser) : null)
-      setLoading(false)
-    })
-    return unsubscribe
+    try {
+      const raw = localStorage.getItem(SESSION_KEY)
+      if (raw) {
+        const stored: StoredUser = JSON.parse(raw)
+        setUser(toUser(stored))
+      }
+    } catch {
+      // ignore corrupted session
+    }
+    setLoading(false)
   }, [])
 
   async function login(email: string, password: string): Promise<void> {
-    await signInWithEmailAndPassword(auth, email, password)
-    // onAuthStateChanged will update user state automatically
+    const users = getStoredUsers()
+    const found = users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+    )
+    if (!found) throw new Error('Invalid email or password.')
+    localStorage.setItem(SESSION_KEY, JSON.stringify(found))
+    setUser(toUser(found))
   }
 
   async function loginWithGoogle(): Promise<void> {
-    await signInWithPopup(auth, googleProvider)
-    // onAuthStateChanged will update user state automatically
+    throw new Error('Google sign-in is not available right now.')
   }
 
   async function signup(name: string, email: string, password: string): Promise<void> {
-    const credential = await createUserWithEmailAndPassword(auth, email, password)
-    // Set display name immediately after account creation
-    await updateProfile(credential.user, { displayName: name })
-    // Manually update local state since onAuthStateChanged may fire before displayName is set
-    setUser(firebaseUserToUser({ ...credential.user, displayName: name }))
+    const users = getStoredUsers()
+    if (users.find((u) => u.email.toLowerCase() === email.toLowerCase())) {
+      throw new Error('An account with this email already exists.')
+    }
+    const newUser: StoredUser = { uid: makeUid(), name: name.trim(), email, password }
+    saveStoredUsers([...users, newUser])
+    localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
+    setUser(toUser(newUser))
   }
 
   async function logout(): Promise<void> {
-    await signOut(auth)
+    localStorage.removeItem(SESSION_KEY)
+    setUser(null)
   }
 
   const value: AuthContextValue = {
