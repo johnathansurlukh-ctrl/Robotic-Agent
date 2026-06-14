@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Clock, Star, ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react'
 import { projects } from '@/data/projects'
 import { useCart } from '@/context/CartContext'
+import AnimateIn from '@/components/ui/AnimateIn'
 
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-700 border-green-200',
@@ -60,8 +61,9 @@ export default function ProjectsPage() {
 
       <div className="container-xl py-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div key={project.id} className="card overflow-hidden group flex flex-col">
+          {projects.map((project, i) => (
+            <AnimateIn key={project.id} delay={i * 60}>
+            <div className="card overflow-hidden group flex flex-col h-full">
               {/* Image */}
               <div className="relative h-52 overflow-hidden">
                 <img referrerPolicy="no-referrer" src={project.image} alt={project.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -131,6 +133,7 @@ export default function ProjectsPage() {
                 </div>
               </div>
             </div>
+            </AnimateIn>
           ))}
         </div>
       </div>

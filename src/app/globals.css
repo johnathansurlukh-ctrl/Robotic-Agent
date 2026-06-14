@@ -41,8 +41,81 @@
   .badge-blue { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800; }
   .badge-orange { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800; }
   .badge-red { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800; }
-  .card { @apply bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300; }
+  .card { @apply bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300; }
   .section-heading { @apply text-3xl md:text-4xl font-bold text-gray-900; }
   .section-subheading { @apply text-lg text-gray-500 mt-2; }
   .container-xl { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
 }
+
+/* ─── Keyframes ─────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse-glow-blue {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.45); }
+  50%       { box-shadow: 0 0 22px 6px rgba(59,130,246,0.2); }
+}
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.08; }
+  50%       { opacity: 0.18; }
+}
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ─── Continuous animations ──────────────────────────────── */
+.animate-float      { animation: float 5s ease-in-out infinite; }
+.animate-float-slow { animation: float 7s ease-in-out 2s infinite; }
+.animate-pulse-glow { animation: pulse-glow-blue 2.5s ease-in-out infinite; }
+.animate-orb-pulse  { animation: orb-pulse 4s ease-in-out infinite; }
+
+/* ─── One-shot entrance (used directly in JSX) ──────────── */
+.animate-fade-up  { animation: fade-up  0.7s cubic-bezier(.16,1,.3,1) both; }
+.animate-scale-in { animation: scale-in 0.6s cubic-bezier(.16,1,.3,1) both; }
+
+.anim-delay-100 { animation-delay: 100ms; }
+.anim-delay-200 { animation-delay: 200ms; }
+.anim-delay-300 { animation-delay: 300ms; }
+.anim-delay-400 { animation-delay: 400ms; }
+.anim-delay-500 { animation-delay: 500ms; }
+.anim-delay-600 { animation-delay: 600ms; }
+
+/* ─── Scroll reveal — JS adds .in-view ──────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(.16,1,.3,1),
+              transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.7s cubic-bezier(.16,1,.3,1),
+              transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.7s cubic-bezier(.16,1,.3,1),
+              transform 0.7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.in-view,
+.reveal-left.in-view,
+.reveal-right.in-view { opacity: 1; transform: translate(0,0); }
+
+/* Stagger delay helpers for grids */
+.td-100 { transition-delay: 100ms; }
+.td-200 { transition-delay: 200ms; }
+.td-300 { transition-delay: 300ms; }
+.td-400 { transition-delay: 400ms; }
+.td-500 { transition-delay: 500ms; }

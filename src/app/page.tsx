@@ -6,18 +6,19 @@ import CategoryGrid from '@/components/home/CategoryGrid'
 import ForSchools from '@/components/home/ForSchools'
 import TrustStrip from '@/components/home/TrustStrip'
 import LearningHubPreview from '@/components/home/LearningHubPreview'
+import AnimateIn from '@/components/ui/AnimateIn'
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <ProjectFinder />
-      <LearningLevelCards />
-      <PopularKits />
-      <CategoryGrid />
-      <ForSchools />
-      <TrustStrip />
-      <LearningHubPreview />
+      <AnimateIn><ProjectFinder /></AnimateIn>
+      <AnimateIn delay={50}><LearningLevelCards /></AnimateIn>
+      <AnimateIn delay={50}><PopularKits /></AnimateIn>
+      <AnimateIn delay={50}><CategoryGrid /></AnimateIn>
+      <AnimateIn delay={50}><ForSchools /></AnimateIn>
+      <AnimateIn delay={50}><TrustStrip /></AnimateIn>
+      <AnimateIn delay={50}><LearningHubPreview /></AnimateIn>
     </>
   )
 }

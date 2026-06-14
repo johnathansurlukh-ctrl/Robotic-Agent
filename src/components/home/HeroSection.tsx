@@ -35,13 +35,13 @@ export default function HeroSection() {
       </div>
 
       {/* Glowing orbs */}
-      <div className="absolute top-20 right-1/4 w-96 h-96 bg-blue-600 rounded-full opacity-10 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-orange-500 rounded-full opacity-10 blur-3xl" />
+      <div className="absolute top-20 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl animate-float animate-orb-pulse" />
+      <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-orange-500 rounded-full blur-3xl animate-float-slow animate-orb-pulse" />
 
       <div className="container-xl relative z-10 pt-20 pb-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
-          <div>
+          <div className="animate-fade-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-400/30 rounded-full text-blue-300 text-sm font-medium mb-6">
               <Star size={14} className="fill-yellow-400 text-yellow-400" />
               Rated #1 Robotics Store for Students
@@ -69,7 +69,7 @@ export default function HeroSection() {
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-3">
-              <Link href="/starter-kits" className="btn-primary text-base px-8 py-4">
+              <Link href="/starter-kits" className="btn-primary text-base px-8 py-4 animate-pulse-glow">
                 <Zap size={18} /> Shop Starter Kits
               </Link>
               <Link href="/build-my-project" className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-400 text-white font-semibold rounded-lg transition-all text-base shadow-lg">
@@ -82,7 +82,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right — feature cards */}
-          <div className="hidden lg:grid grid-cols-2 gap-4">
+          <div className="hidden lg:grid grid-cols-2 gap-4 animate-fade-up anim-delay-200">
             {[
               { img: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=120&h=120&fit=crop', title: 'Line Follower Kit', sub: 'Complete kit · Beginner', price: '₹1,351', badge: 'Popular', href: '/projects/line-follower-robot' },
               { img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=120&h=120&fit=crop', title: 'Obstacle Avoidance', sub: 'With ultrasonic sensor', price: '₹1,743', badge: 'Best Seller', href: '/projects/obstacle-avoidance-robot' },
@@ -106,7 +106,7 @@ export default function HeroSection() {
         </div>
 
         {/* Stats bar */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/10 pt-8">
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-white/10 pt-8 animate-fade-up anim-delay-400">
           {stats.map(({ value, label }) => (
             <div key={label} className="text-center">
               <div className="text-2xl md:text-3xl font-black text-white">{value}</div>

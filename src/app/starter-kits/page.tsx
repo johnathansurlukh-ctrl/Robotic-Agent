@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle, ShoppingCart, ArrowRight, Star } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
+import AnimateIn from '@/components/ui/AnimateIn'
 
 const kits = [
   {
@@ -108,8 +109,9 @@ export default function StarterKitsPage() {
 
       <div className="container-xl py-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {kits.map((kit) => (
-            <div key={kit.id} className="card overflow-hidden group flex flex-col">
+          {kits.map((kit, i) => (
+            <AnimateIn key={kit.id} delay={i * 60}>
+            <div className="card overflow-hidden group flex flex-col h-full">
               {/* Image */}
               <div className="relative h-52 overflow-hidden">
                 <img referrerPolicy="no-referrer" src={kit.image} alt={kit.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -166,6 +168,7 @@ export default function StarterKitsPage() {
                 </div>
               </div>
             </div>
+            </AnimateIn>
           ))}
         </div>
       </div>
