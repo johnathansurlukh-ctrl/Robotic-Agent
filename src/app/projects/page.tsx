@@ -1,6 +1,9 @@
+'use client'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Clock, Star, ShoppingCart, ArrowRight, Zap } from 'lucide-react'
+import { Clock, Star, ShoppingCart, ArrowRight, CheckCircle } from 'lucide-react'
 import { projects } from '@/data/projects'
+import { useCart } from '@/context/CartContext'
 
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-700 border-green-200',
@@ -18,6 +21,15 @@ const categories = [
 ]
 
 export default function ProjectsPage() {
+  const { addItem } = useCart()
+  const [added, setAdded] = useState<Record<string, boolean>>({})
+
+  function handleAdd(project: typeof projects[number]) {
+    addItem({ id: `kit-${project.id}`, name: project.name, price: project.fullKitPrice, image: project.image, slug: `/projects/${project.slug}` })
+    setAdded(prev => ({ ...prev, [project.id]: true }))
+    setTimeout(() => setAdded(prev => ({ ...prev, [project.id]: false })), 2000)
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -109,8 +121,11 @@ export default function ProjectsPage() {
                     <Link href={`/projects/${project.slug}`} className="px-4 py-2.5 text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors flex items-center gap-1.5">
                       View Kit <ArrowRight size={14} />
                     </Link>
-                    <button className="px-4 py-2.5 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold rounded-xl transition-colors flex items-center gap-1.5">
-                      <ShoppingCart size={15} /> Add All
+                    <button
+                      onClick={() => handleAdd(project)}
+                      className="px-4 py-2.5 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold rounded-xl transition-colors flex items-center gap-1.5"
+                    >
+                      {added[project.id] ? <><CheckCircle size={15} /> Added!</> : <><ShoppingCart size={15} /> Add All</>}
                     </button>
                   </div>
                 </div>

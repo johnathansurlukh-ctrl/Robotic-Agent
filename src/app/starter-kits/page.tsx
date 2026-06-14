@@ -1,5 +1,8 @@
+'use client'
+import { useState } from 'react'
 import Link from 'next/link'
-import { CheckCircle, ShoppingCart, ArrowRight, Star, Zap } from 'lucide-react'
+import { CheckCircle, ShoppingCart, ArrowRight, Star } from 'lucide-react'
+import { useCart } from '@/context/CartContext'
 
 const kits = [
   {
@@ -81,6 +84,15 @@ const kits = [
 ]
 
 export default function StarterKitsPage() {
+  const { addItem } = useCart()
+  const [added, setAdded] = useState<Record<string, boolean>>({})
+
+  function handleAdd(kit: typeof kits[number]) {
+    addItem({ id: kit.id, name: kit.name, price: kit.price, image: kit.image, slug: `/starter-kits` })
+    setAdded(prev => ({ ...prev, [kit.id]: true }))
+    setTimeout(() => setAdded(prev => ({ ...prev, [kit.id]: false })), 2000)
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -104,7 +116,7 @@ export default function StarterKitsPage() {
                 {kit.badge && (
                   <span className="absolute top-3 left-3 px-3 py-1.5 bg-orange-500 text-white text-xs font-bold rounded-full">{kit.badge}</span>
                 )}
-                {kit.originalPrice && (
+                {'originalPrice' in kit && kit.originalPrice && (
                   <span className="absolute top-3 right-3 px-2.5 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
                     -{Math.round((1 - kit.price / kit.originalPrice) * 100)}%
                   </span>
@@ -138,14 +150,17 @@ export default function StarterKitsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-2xl font-black text-gray-900">₹{kit.price.toLocaleString()}</div>
-                    {kit.originalPrice && <div className="text-sm text-gray-400 line-through">₹{kit.originalPrice.toLocaleString()}</div>}
+                    {'originalPrice' in kit && kit.originalPrice && <div className="text-sm text-gray-400 line-through">₹{kit.originalPrice.toLocaleString()}</div>}
                   </div>
                   <div className="flex gap-2">
                     <Link href="#" className="px-3 py-2.5 text-blue-600 bg-blue-50 hover:bg-blue-100 text-sm font-semibold rounded-xl transition-colors flex items-center gap-1">
                       Details <ArrowRight size={14} />
                     </Link>
-                    <button className="flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors">
-                      <ShoppingCart size={15} /> Add
+                    <button
+                      onClick={() => handleAdd(kit)}
+                      className="flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-colors"
+                    >
+                      {added[kit.id] ? <><CheckCircle size={15} /> Added!</> : <><ShoppingCart size={15} /> Add</>}
                     </button>
                   </div>
                 </div>
